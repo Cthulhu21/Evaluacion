@@ -13,7 +13,7 @@ public:
 private:
     string Asiento;
     list<string> Pedido;
-    list<string> _Nombre;
+    list<string> Nombre;
 };
 
 #endif // CLIENTES_H

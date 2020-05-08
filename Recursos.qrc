@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Recursos/OpcionesAdmin.png</file>
+        <file>Recursos/AgregarInventario.png</file>
+        <file>Recursos/AgregarCombos.png</file>
+        <file>Recursos/VerVentasDelDia.png</file>
+    </qresource>
+</RCC>

@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include "funcionesadmin.h"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
@@ -20,5 +20,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    FuncionesAdmin *InterfazAdmin;
 };
 #endif // MAINWINDOW_H

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "clientes.h"
+#include "funcionesadmin.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,5 +23,12 @@ void MainWindow::on_Ok_Acceder_clicked()
     QString CC=ui->TextCCUserName->text();
     if(Nombre=="Admin" and CC=="123456789")
     {
+        InterfazAdmin = new FuncionesAdmin;
+        this->hide();
+        InterfazAdmin->show();
+    }
+    else
+    {
+
     }
 }
