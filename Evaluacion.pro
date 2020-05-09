@@ -16,19 +16,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    agregarcombos.cpp \
+    agregarinventario.cpp \
     clientes.cpp \
     funcionesadmin.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    verventas.cpp
 
 HEADERS += \
+    agregarcombos.h \
+    agregarinventario.h \
     clientes.h \
     funcionesadmin.h \
-    mainwindow.h
+    mainwindow.h \
+    verventas.h
 
 FORMS += \
+    agregarcombos.ui \
+    agregarinventario.ui \
     funcionesadmin.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    verventas.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

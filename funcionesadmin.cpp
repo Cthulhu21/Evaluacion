@@ -59,8 +59,20 @@ void FuncionesAdmin::on_Ok_FuncionesAdmin_clicked()
 {
     if(ui->AgregarCombosCheck->checkState()==2)
     {
+        this->hide();
+        InterfazCombos = new AgregarCombos;
+        InterfazCombos->show();
     }
     else if(ui->AgregarInventarioCheck->checkState()==2)
     {
+        this->hide();
+        InterfazInventario = new AgregarInventario;
+        InterfazInventario->show();
+    }
+    else if(ui->VerVentasCheck->checkState()==2)
+    {
+        this->hide();
+        InterfazVentas=new VerVentas;
+        InterfazVentas->show();
     }
 }

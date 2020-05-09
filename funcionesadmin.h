@@ -2,6 +2,9 @@
 #define FUNCIONESADMIN_H
 
 #include <QDialog>
+#include <agregarcombos.h>
+#include <agregarinventario.h>
+#include <verventas.h>
 
 namespace Ui {
 class FuncionesAdmin;
@@ -26,6 +29,9 @@ private slots:
 
 private:
     Ui::FuncionesAdmin *ui;
+    AgregarCombos *InterfazCombos;
+    AgregarInventario *InterfazInventario;
+    VerVentas *InterfazVentas;
 };
 
 #endif // FUNCIONESADMIN_H
