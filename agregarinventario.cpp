@@ -96,7 +96,82 @@ void AgregarInventario::CargarInventario()
 
 void AgregarInventario::on_VerInventario_clicked()
 {
-    CargarInventario();
+    ui->MiniInterfazInventario->hide();
+    ui->Tabla->show();
+    if(!Primera)
+    {
+        ui->Tabla->clearContents();
+        //QMessageBox::information(this,"Recordatorio", "Tenga en cuenta que si modifica esto no se guardará");
+        CargarInventario();
+        ui->Tabla->setColumnCount(4);
+        QStringList Cabecera, IDs, Nombres, Cantidades, Precios;
+        Cabecera << "ID" << "Nombre" << "Cantidad" << "Precio";
+        for(auto Item: Inventario)
+        {
+            QString _IDs,_Nombres,_Cantidades,_Precios;;
+            for(auto Caracter: Item.first)
+            {
+                _IDs+=Caracter;
+            }
+            int Contador=0;
+            for(auto Lista: Item.second)
+            {
+                if(Contador==0)
+                {
+                    for(auto Elemento: Lista)
+                    {
+                        for(auto Letra: Elemento)
+                        {
+                            _Nombres+=Letra;
+                        }
+                    }
+                }
+                else if(Contador==1)
+                {
+                    for(auto Elemento: Lista)
+                    {
+                        for(auto Letra: Elemento)
+                        {
+                            _Cantidades+=Letra;
+                        }
+                    }
+                }
+                else
+                {
+                    for(auto Elemento: Lista)
+                    {
+                        for(auto Letra: Elemento)
+                        {
+                            _Precios+=Letra;
+                        }
+                    }
+                }
+                Contador++;
+            }
+            IDs<<_IDs;
+            Nombres<<_Nombres;
+            Cantidades<<_Cantidades;
+            Precios<<_Precios;
+        }
+        ui->Tabla->setHorizontalHeaderLabels(Cabecera);
+        int Fila=0;
+        auto ComienzoNombre=Nombres.begin(), ComienzoCantidades=Cantidades.begin(), ComienzoPrecios=Precios.begin();
+        for(auto Elemento: IDs)
+        {
+            ui->Tabla->insertRow(ui->Tabla->rowCount());
+            ui->Tabla->setItem(Fila, 0, new QTableWidgetItem(Elemento));
+            ui->Tabla->setItem(Fila,1, new QTableWidgetItem(*ComienzoNombre));
+            ui->Tabla->setItem(Fila,2, new QTableWidgetItem(*ComienzoCantidades));
+            ui->Tabla->setItem(Fila++,3, new QTableWidgetItem(*ComienzoPrecios));
+            ComienzoNombre++, ComienzoPrecios++, ComienzoCantidades++;
+        }
+        Primera=true;
+    }
+}
+
+void AgregarInventario::on_AgregarElementos_clicked()
+{
+    ui->MiniInterfazInventario->show();
     ui->Tabla->hide();
 }
 
