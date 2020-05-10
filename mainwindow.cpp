@@ -21,7 +21,7 @@ void MainWindow::on_Ok_Acceder_clicked()
 {
     QString Nombre=ui->TextUserName->text();
     QString CC=ui->TextCCUserName->text();
-    if(Nombre=="Admin" and CC=="123456789")
+    if(Nombre=="A" and CC=="1")
     {
         InterfazAdmin = new FuncionesAdmin;
         this->hide();

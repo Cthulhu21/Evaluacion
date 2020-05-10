@@ -3,6 +3,9 @@
 #include "fstream"
 #include <QMessageBox>
 #include <QStandardItemModel>
+#include "funcionesadmin.h"
+#include "mainwindow.h"
+
 using namespace std;
 
 AgregarInventario::AgregarInventario(QWidget *parent) :
@@ -10,6 +13,7 @@ AgregarInventario::AgregarInventario(QWidget *parent) :
     ui(new Ui::AgregarInventario)
 {
     ui->setupUi(this);
+    ui->MiniInterfazInventario->hide();
 }
 
 AgregarInventario::~AgregarInventario()
@@ -38,19 +42,46 @@ void AgregarInventario::CargarInventario()
                 switch(Contador)
                 {
                 case 0:
-                    _ID+=Caracter;
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _ID+=Caracter;
+                    }
                     break;
                 case 1:
-                    _Nombre+=Caracter;
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _Nombre+=Caracter;
+                    }
                     break;
                 case 2:
-                    _Cantidad+=Caracter;
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _Cantidad+=Caracter;
+                    }
                     break;
                 case 3:
-                    _Precio+=Caracter;
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _Precio+=Caracter;
+                    }
                     break;
                 }
-                Contador++;
             }
             list<list<string>> Informacion;
             Informacion.push_back({_Nombre});
@@ -66,8 +97,92 @@ void AgregarInventario::CargarInventario()
 void AgregarInventario::on_VerInventario_clicked()
 {
     CargarInventario();
+    ui->Tabla->hide();
 }
 
-void AgregarInventario::on_Tabla_activated(const QModelIndex &index)
+void AgregarInventario::on_BotonAgregar_clicked()
 {
+    string  ID, Nombre, Cantidad, Precio;
+    QString _ID =ui->ID->text();
+    QString _Nombre=ui->Nombre->text();
+    QString _Cantidad=ui->Cantidad->text();
+    QString _Precio=ui->Precio->text();
+    bool Error=false;
+    for(auto Caracter: _ID)
+    {
+        if(Caracter.isDigit())
+        {
+            ID+=Caracter.toLatin1();
+        }
+        else
+        {
+            Error=true;
+            break;
+        }
+    }
+    if(!Error)
+    {
+        for(auto Caracter: _Nombre)
+        {
+            Nombre+=Caracter.toLatin1();
+        }
+        for(auto Caracter: _Cantidad)
+        {
+            if(Caracter.isDigit())
+            {
+                Cantidad+=Caracter.toLatin1();
+            }
+            else
+            {
+                Error=true;
+                break;
+            }
+        }
+        if(!Error)
+        {
+            for(auto Caracter: _Precio)
+            {
+                if(Caracter.isDigit())
+                {
+                    Precio+=Caracter.toLatin1();
+                }
+                else
+                {
+                    Error=true;
+                    break;
+                }
+            }
+            if(Nombre=="" or Cantidad=="" or Precio=="" or ID=="")
+            {
+                Error=true;
+            }
+            if(!Error)
+            {
+                list<string> ListaNombre={Nombre}, ListaCantidad={Cantidad}, ListaPrecio={Precio};
+                auto Insertar=Inventario.insert({ID,{ListaNombre,ListaCantidad,ListaPrecio}});
+                if(Insertar.second==false)
+                {
+                    QMessageBox::information(this, "Error", "El elemento ya se encuentra registrado");
+                }
+                else
+                {
+                    Primera=false;
+                    QMessageBox::information(this, "Exito", "Se ha registrado de manera exitosa");
+                }
+            }
+        }
+    }
+    if(Error)
+    {
+        QMessageBox::critical(this, "Error", "Introduzca valores correctos");
+        ui->Nombre->clear();
+        ui->Precio->clear();
+        ui->Cantidad->clear();
+        ui->ID->clear();
+    }
+}
+
+void AgregarInventario::on_Salir_clicked()
+{
+
 }

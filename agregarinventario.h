@@ -19,16 +19,19 @@ public:
     ~AgregarInventario();
 
 private slots:
-    void on_pushButton_clicked();
-
     void on_VerInventario_clicked();
 
-    void on_Tabla_activated(const QModelIndex &index);
+    void on_AgregarElementos_clicked();
+
+    void on_BotonAgregar_clicked();
+
+    void on_Salir_clicked();
 
 private:
     Ui::AgregarInventario *ui;
     string ID, Nombre, Cantidad, Precio;
     map<string,list<list<string>>> Inventario;
+    bool Primera=false;
     void CargarInventario();
 };
 
