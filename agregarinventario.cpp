@@ -14,6 +14,8 @@ AgregarInventario::AgregarInventario(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->MiniInterfazInventario->hide();
+    CargarInventario();
+    on_VerInventario_clicked();
 }
 
 AgregarInventario::~AgregarInventario()
@@ -102,7 +104,6 @@ void AgregarInventario::on_VerInventario_clicked()
     {
         ui->Tabla->clearContents();
         //QMessageBox::information(this,"Recordatorio", "Tenga en cuenta que si modifica esto no se guardará");
-        CargarInventario();
         ui->Tabla->setColumnCount(4);
         QStringList Cabecera, IDs, Nombres, Cantidades, Precios;
         Cabecera << "ID" << "Nombre" << "Cantidad" << "Precio";
@@ -259,5 +260,50 @@ void AgregarInventario::on_BotonAgregar_clicked()
 
 void AgregarInventario::on_Salir_clicked()
 {
+    this->close();
+}
 
+void AgregarInventario::on_Guardar_clicked()
+{
+    ofstream Archivo;
+    Archivo.open("Inventario.txt",ios::out);
+    if(Archivo.fail())
+    {
+        QMessageBox::critical(this, "Error", "Ha ocurrido un error al intentar abrir el archivo");
+    }
+    else
+    {
+        for(auto Elemento: Inventario)
+        {
+            string ID=Elemento.first, Nombre, Cantidad, Precio;
+            int Contador=0;
+            for(auto Lista: Elemento.second)
+            {
+                switch (Contador)
+                {
+                case 0:
+                    for(auto Caracter : Lista)
+                    {
+                        Nombre+=Caracter;
+                    }
+                    break;
+                case 1:
+                    for(auto Caracter : Lista)
+                    {
+                        Cantidad+=Caracter;
+                    }
+                    break;
+                case 2:
+                    for(auto Caracter : Lista)
+                    {
+                        Precio+=Caracter;
+                    }
+                    break;
+                }
+                Contador++;
+            }
+            Archivo <<ID<<";"<<Nombre<<";"<<Cantidad<<";"<<Precio<<endl;
+        }
+        Archivo.close();
+    }
 }

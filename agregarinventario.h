@@ -27,9 +27,11 @@ private slots:
 
     void on_Salir_clicked();
 
+    void on_Guardar_clicked();
+
 private:
     Ui::AgregarInventario *ui;
-    string ID, Nombre, Cantidad, Precio;
+    //string ID, Nombre, Cantidad, Precio;
     map<string,list<list<string>>> Inventario;
     bool Primera=false;
     void CargarInventario();
