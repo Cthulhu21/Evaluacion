@@ -36,11 +36,21 @@ private slots:
 
     void on_Listo_clicked();
 
+    void on_EliminarCombo_clicked();
+
+    void on_BotonEliminarCombo_clicked();
+
+    void on_Salir_clicked();
+
+    void on_Guardar_clicked();
+
 private:
     Ui::AgregarCombos *ui;
     map<string, list<string>> Combos;
     QList<QString> NuevasIDs;
     bool Primera=false;
+    void CargarInventario();
+    map<string,list<list<string>>> Inventario;
 };
 
 #endif // AGREGARCOMBOS_H

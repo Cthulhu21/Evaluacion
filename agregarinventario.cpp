@@ -103,7 +103,6 @@ void AgregarInventario::on_VerInventario_clicked()
     if(!Primera)
     {
         ui->Tabla->clearContents();
-        //QMessageBox::information(this,"Recordatorio", "Tenga en cuenta que si modifica esto no se guardará");
         ui->Tabla->setColumnCount(4);
         QStringList Cabecera, IDs, Nombres, Cantidades, Precios;
         Cabecera << "ID" << "Nombre" << "Cantidad" << "Precio";

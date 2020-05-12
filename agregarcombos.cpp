@@ -11,12 +11,87 @@ AgregarCombos::AgregarCombos(QWidget *parent) :
     Cargar();
     on_Combos_clicked();
     ui->CajaAgregarCombos->hide();
+    CargarInventario();
+    ui->CajaEliminarCombo->hide();
 }
 
 AgregarCombos::~AgregarCombos()
 {
     delete ui;
 }
+
+void AgregarCombos::CargarInventario()
+{
+    ifstream Archivo;
+    Archivo.open("Inventario.txt",ios::in);
+    if(Archivo.fail())
+    {
+        QMessageBox::warning(this, "Revise la base datos", "No se pudo encontrar el archivo");
+    }
+    else
+    {
+        string Linea;
+        while(!Archivo.eof())
+        {
+            string _ID,_Nombre,_Cantidad,_Precio;
+            int Contador=0;
+            getline(Archivo,Linea);
+            for(auto Caracter: Linea)
+            {
+                switch(Contador)
+                {
+                case 0:
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _ID+=Caracter;
+                    }
+                    break;
+                case 1:
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _Nombre+=Caracter;
+                    }
+                    break;
+                case 2:
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _Cantidad+=Caracter;
+                    }
+                    break;
+                case 3:
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        _Precio+=Caracter;
+                    }
+                    break;
+                }
+            }
+            list<list<string>> Informacion;
+            Informacion.push_back({_Nombre});
+            Informacion.push_back({_Cantidad});
+            Informacion.push_back({_Precio});
+            Inventario[_ID]={Informacion};
+        }
+        Archivo.close();
+    }
+}
+
 
 void AgregarCombos::Cargar()
 {
@@ -71,6 +146,7 @@ void AgregarCombos::on_Combos_clicked()
 {
     ui->CajaAgregarCombos->hide();
     ui->Tabla->show();
+    ui->CajaEliminarCombo->hide();
     if(!Primera)
     {
         ui->Tabla->clearContents();
@@ -126,9 +202,8 @@ void AgregarCombos::on_AgregarCombo_clicked()
 {
     ui->Tabla->hide();
     ui->CajaAgregarCombos->show();
+    ui->CajaEliminarCombo->hide();
 }
-
-
 
 void AgregarCombos::on_Reiniciar_clicked()
 {
@@ -139,6 +214,7 @@ void AgregarCombos::on_AgregarID_clicked()
 {
     QString ID=ui->TextoIDAgregar->text();
     bool Error=false;
+    string _ID;
     for(auto Caracter: ID)
     {
         if(!Caracter.isDigit())
@@ -146,15 +222,29 @@ void AgregarCombos::on_AgregarID_clicked()
             Error=true;
             break;
         }
+        else
+        {
+            _ID+=Caracter.toLatin1();
+        }
     }
     if(!Error)
     {
-        NuevasIDs.push_back(ID);
-        ui->TextoIDAgregar->clear();
+        Error=(Inventario.find(_ID)==Inventario.end())? true :false;
+        if(!Error)
+        {
+            NuevasIDs.push_back(ID);
+            ui->TextoIDAgregar->clear();
+        }
+        else
+        {
+            QMessageBox::critical(this, "Error", "Introduzca un valor válido");
+            ui->TextoIDAgregar->clear();
+        }
     }
     else
     {
         QMessageBox::critical(this, "Error", "Introduzca un valor válido");
+        ui->TextoIDAgregar->clear();
     }
 }
 
@@ -229,5 +319,102 @@ void AgregarCombos::on_Listo_clicked()
     else
     {
         QMessageBox::critical(this, "Error", "Escriba un valor válido");
+    }
+}
+
+void AgregarCombos::on_EliminarCombo_clicked()
+{
+    ui->CajaEliminarCombo->show();
+    ui->Tabla->hide();
+    ui->CajaAgregarCombos->hide();
+}
+
+void AgregarCombos::on_BotonEliminarCombo_clicked()
+{
+    QString _ID=ui->TextoEliminarCombo->text();
+    string ID;
+    bool Error=false;
+    for(auto Caracter: _ID)
+    {
+        if(!Caracter.isDigit())
+        {
+            Error=true;
+            break;
+        }
+        else
+        {
+            ID+=Caracter.toLatin1();
+        }
+    }
+    if(!Error)
+    {
+        Error=(Combos.find(ID)==Combos.end())? true: false;
+        if(!Error)
+        {
+            Combos.erase(ID);
+            QMessageBox::information(this, "Exito", "Se ha borrado el combo");
+            ui->TextoEliminarCombo->clear();
+            Primera=false;
+        }
+        else
+        {
+            QMessageBox::critical(this, "Error", "Ingrese un valor válido");
+        }
+    }
+    else
+    {
+        QMessageBox::critical(this, "Error", "Ingrese un valor válido");
+    }
+}
+
+void AgregarCombos::on_Salir_clicked()
+{
+    this->close();
+}
+
+void AgregarCombos::on_Guardar_clicked()
+{
+    ofstream Archivo;
+    Archivo.open("Combos.txt",ios::out);
+    if(Archivo.fail())
+    {
+        QMessageBox::critical(this, "Error", "Ha ocurrido un error al intentar abrir el archivo");
+    }
+    else
+    {
+        for(auto Elemento : Combos)
+        {
+            string ID=Elemento.first, ID_Elementos, Precio;
+            int Contador=0;
+            for(auto Lista: Elemento.second)
+            {
+                int i=0;
+                switch (Contador)
+                {
+                case 0:
+                    for(auto Caracter : Lista)
+                    {
+                        if(i<int(Lista.size()))
+                        {
+                            ID_Elementos+=string(1,Caracter);
+                        }
+                        else
+                        {
+                            ID_Elementos+=string(1,Caracter);
+                        }
+                        i++;
+                    }
+                    break;
+                case 1:
+                    for(auto Caracter : Lista)
+                    {
+                        Precio+=string(1,Caracter);
+                    }
+                }
+                Contador++;
+            }
+            Archivo<<ID<<";"<<ID_Elementos<<";"<<Precio<<endl;
+        }
+        Archivo.close();
     }
 }
