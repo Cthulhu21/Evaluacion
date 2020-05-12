@@ -18,8 +18,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     agregarcombos.cpp \
     agregarinventario.cpp \
-    clientes.cpp \
     funcionesadmin.cpp \
+    interfazclientes.cpp \
     main.cpp \
     mainwindow.cpp \
     verventas.cpp
@@ -27,8 +27,8 @@ SOURCES += \
 HEADERS += \
     agregarcombos.h \
     agregarinventario.h \
-    clientes.h \
     funcionesadmin.h \
+    interfazclientes.h \
     mainwindow.h \
     verventas.h
 
@@ -36,6 +36,7 @@ FORMS += \
     agregarcombos.ui \
     agregarinventario.ui \
     funcionesadmin.ui \
+    interfazclientes.ui \
     mainwindow.ui \
     verventas.ui
 

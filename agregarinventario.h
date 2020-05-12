@@ -31,7 +31,6 @@ private slots:
 
 private:
     Ui::AgregarInventario *ui;
-    //string ID, Nombre, Cantidad, Precio;
     map<string,list<list<string>>> Inventario;
     bool Primera=false;
     void CargarInventario();

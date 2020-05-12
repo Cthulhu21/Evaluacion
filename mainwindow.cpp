@@ -1,14 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "clientes.h"
-#include "funcionesadmin.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    Clientes Informacion("",{},{});
 }
 
 MainWindow::~MainWindow()
@@ -29,6 +26,8 @@ void MainWindow::on_Ok_Acceder_clicked()
     }
     else
     {
-
+        Interfaz = new InterfazClientes;
+        this->hide();
+        Interfaz->show();
     }
 }

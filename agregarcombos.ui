@@ -23,77 +23,25 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPushButton" name="AgregarCombo">
-   <property name="geometry">
-    <rect>
-     <x>360</x>
-     <y>70</y>
-     <width>91</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Agregar Combo</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="EliminarCombo">
-   <property name="geometry">
-    <rect>
-     <x>360</x>
-     <y>140</y>
-     <width>91</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Eliminar Combo</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="Combos">
-   <property name="geometry">
-    <rect>
-     <x>360</x>
-     <y>10</y>
-     <width>91</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Combos</string>
-   </property>
-  </widget>
   <widget class="QGroupBox" name="CajaAgregarCombos">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>40</y>
-     <width>271</width>
-     <height>211</height>
+     <x>40</x>
+     <y>70</y>
+     <width>292</width>
+     <height>146</height>
     </rect>
    </property>
    <property name="title">
     <string>Agregar Combos</string>
    </property>
-   <widget class="QPushButton" name="AgregarID">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>60</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Agregar ID</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>110</y>
-      <width>71</width>
-      <height>31</height>
+      <x>10</x>
+      <y>68</y>
+      <width>64</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
@@ -103,14 +51,14 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>0</y>
-      <width>181</width>
-      <height>51</height>
+      <x>10</x>
+      <y>23</y>
+      <width>102</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>ID del nuevo elemento del combo</string>
+     <string>Contenido del Combo</string>
     </property>
     <property name="scaledContents">
      <bool>false</bool>
@@ -119,35 +67,22 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>110</y>
-      <width>101</width>
-      <height>31</height>
+      <x>149</x>
+      <y>68</y>
+      <width>56</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
      <string>Precio Total</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Reiniciar">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>60</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Reiniciar Elementos</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="TextoIDAgregar">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>40</y>
-      <width>113</width>
+      <x>10</x>
+      <y>42</y>
+      <width>133</width>
       <height>20</height>
      </rect>
     </property>
@@ -156,8 +91,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>140</y>
-      <width>113</width>
+      <y>87</y>
+      <width>133</width>
       <height>20</height>
      </rect>
     </property>
@@ -165,9 +100,9 @@
    <widget class="QLineEdit" name="TextoPrecio">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>140</y>
-      <width>113</width>
+      <x>149</x>
+      <y>87</y>
+      <width>133</width>
       <height>20</height>
      </rect>
     </property>
@@ -176,13 +111,36 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>170</y>
+      <y>110</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Listo</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>20</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cantidad</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="TextoCantidad">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>40</y>
+      <width>131</width>
+      <height>20</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -235,40 +193,67 @@
     </property>
    </widget>
   </widget>
-  <widget class="QPushButton" name="Salir">
+  <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>250</y>
-     <width>81</width>
-     <height>41</height>
+     <y>0</y>
+     <width>103</width>
+     <height>321</height>
     </rect>
    </property>
-   <property name="text">
-    <string>Salir</string>
+   <property name="title">
+    <string>Opciones</string>
    </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QPushButton" name="Combos">
+      <property name="text">
+       <string>Combos</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Inventario</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="AgregarCombo">
+      <property name="text">
+       <string>Agregar Combo</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPushButton" name="EliminarCombo">
+      <property name="text">
+       <string>Eliminar Combo</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QPushButton" name="Guardar">
+      <property name="text">
+       <string>Guardar</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QPushButton" name="Salir">
+      <property name="text">
+       <string>Salir</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
-  <widget class="QPushButton" name="Guardar">
-   <property name="geometry">
-    <rect>
-     <x>364</x>
-     <y>200</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Guardar</string>
-   </property>
-  </widget>
-  <zorder>CajaEliminarCombo</zorder>
-  <zorder>Tabla</zorder>
-  <zorder>AgregarCombo</zorder>
-  <zorder>EliminarCombo</zorder>
-  <zorder>Combos</zorder>
   <zorder>CajaAgregarCombos</zorder>
-  <zorder>Salir</zorder>
-  <zorder>Guardar</zorder>
+  <zorder>CajaEliminarCombo</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>Tabla</zorder>
  </widget>
  <resources/>
  <connections/>

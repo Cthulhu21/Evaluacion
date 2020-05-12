@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 #include "funcionesadmin.h"
 #include <QMainWindow>
+#include "interfazclientes.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,5 +22,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     FuncionesAdmin *InterfazAdmin;
+    InterfazClientes *Interfaz;
 };
 #endif // MAINWINDOW_H

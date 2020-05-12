@@ -5,6 +5,7 @@
 #include <agregarcombos.h>
 #include <agregarinventario.h>
 #include <verventas.h>
+#include <map>
 
 namespace Ui {
 class FuncionesAdmin;
