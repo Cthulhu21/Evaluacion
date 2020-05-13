@@ -3,6 +3,7 @@
 #include "funcionesadmin.h"
 #include <QMainWindow>
 #include "interfazclientes.h"
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,6 +19,8 @@ public:
 
 private slots:
     void on_Ok_Acceder_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

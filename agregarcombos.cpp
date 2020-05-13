@@ -9,10 +9,12 @@ AgregarCombos::AgregarCombos(QWidget *parent) :
 {
     ui->setupUi(this);
     Cargar();
+    CargarInventario();
+    TablaInventario();
     on_Combos_clicked();
     ui->CajaAgregarCombos->hide();
-    CargarInventario();
     ui->CajaEliminarCombo->hide();
+    ui->TablaInventario->hide();
 }
 
 AgregarCombos::~AgregarCombos()
@@ -82,11 +84,14 @@ void AgregarCombos::CargarInventario()
                     break;
                 }
             }
-            list<list<string>> Informacion;
+            list<string> Informacion;
             Informacion.push_back({_Nombre});
             Informacion.push_back({_Cantidad});
             Informacion.push_back({_Precio});
-            Inventario[_ID]={Informacion};
+            if(_ID!="")
+            {
+                Inventario[_ID]={Informacion};
+            }
         }
         Archivo.close();
     }
@@ -103,9 +108,9 @@ void AgregarCombos::Cargar()
     }
     else
     {
-        string Linea, ID, IDs_Elementos, PrecioTotal;
         while(!Archivo.eof())
         {
+            string Linea, ID, Contenido, PrecioTotal, Cantidad;
             getline(Archivo,Linea);
             int Contador=0;
             for(auto Caracter : Linea)
@@ -129,15 +134,28 @@ void AgregarCombos::Cargar()
                     }
                     else
                     {
-                        IDs_Elementos+=Caracter;
+                        Contenido+=Caracter;
                     }
                     break;
                 case 2:
+                    if(Caracter==';')
+                    {
+                        Contador++;
+                    }
+                    else
+                    {
+                        Cantidad+=Caracter;
+                    }
+                    break;
+                case 3:
                     PrecioTotal+=Caracter;
                     break;
                 }
             }
-            Combos[ID]={IDs_Elementos,PrecioTotal};
+            if(ID!="")
+            {
+                Combos[ID]={Contenido,Cantidad,PrecioTotal};
+            }
         }
     }
 }
@@ -147,15 +165,16 @@ void AgregarCombos::on_Combos_clicked()
     ui->CajaAgregarCombos->hide();
     ui->Tabla->show();
     ui->CajaEliminarCombo->hide();
+    ui->TablaInventario->hide();
     if(!Primera)
     {
         ui->Tabla->clearContents();
-        ui->Tabla->setColumnCount(3);
-        QStringList Cabecera, IDs, IDs_Elementos, PreciosTotales;
-        Cabecera << "ID" << "IDs Contenido" << "Precio Total";
+        ui->Tabla->setColumnCount(4);
+        QStringList Cabecera, IDs, Contenido, PreciosTotales, Cantidad;
+        Cabecera << "ID" << "Contenido"<<"Cantidad"<< "Precio Total";
         for(auto Item: Combos)
         {
-            QString _IDs, _IDs_Elementos,_PreciosTotales;
+            QString _IDs, _Contenido,_PreciosTotales, _Cantidad;
             for(auto Caracter: Item.first)
             {
                 _IDs+=Caracter;
@@ -167,7 +186,14 @@ void AgregarCombos::on_Combos_clicked()
                 {
                     for(auto Caracter: Elementos)
                     {
-                        _IDs_Elementos+=Caracter;
+                        _Contenido+=Caracter;
+                    }
+                }
+                else if(Contador==1)
+                {
+                    for(auto Caracter: Elementos)
+                    {
+                        _Cantidad+=Caracter;
                     }
                 }
                 else
@@ -180,19 +206,22 @@ void AgregarCombos::on_Combos_clicked()
                 Contador++;
             }
             IDs<<_IDs;
-            IDs_Elementos<<_IDs_Elementos;
+            Contenido<<_Contenido;
             PreciosTotales<<_PreciosTotales;
+            Cantidad<<_Cantidad;
         }
         ui->Tabla->setHorizontalHeaderLabels(Cabecera);
         int Fila=0;
-        auto ComienzoIDsContenido=IDs_Elementos.begin(), ComienzoPreciosTotales=PreciosTotales.begin();
+        auto ComienzoContenido=Contenido.begin(), ComienzoPreciosTotales=PreciosTotales.begin();
+        auto ComienzoCantidad=Cantidad.begin();
         for(auto Elemento: IDs)
         {
             ui->Tabla->insertRow(ui->Tabla->rowCount());
             ui->Tabla->setItem(Fila,0, new QTableWidgetItem(Elemento));
-            ui->Tabla->setItem(Fila,1, new QTableWidgetItem(*ComienzoIDsContenido));
-            ui->Tabla->setItem(Fila++,2, new QTableWidgetItem(*ComienzoPreciosTotales));
-            ComienzoIDsContenido++, ComienzoPreciosTotales++;
+            ui->Tabla->setItem(Fila,1, new QTableWidgetItem(*ComienzoContenido));
+            ui->Tabla->setItem(Fila,2, new QTableWidgetItem(*ComienzoCantidad));
+            ui->Tabla->setItem(Fila++,3, new QTableWidgetItem(*ComienzoPreciosTotales));
+            ComienzoContenido++, ComienzoPreciosTotales++, ComienzoCantidad++;
         }
         Primera=true;
     }
@@ -201,6 +230,7 @@ void AgregarCombos::on_Combos_clicked()
 void AgregarCombos::on_AgregarCombo_clicked()
 {
     ui->Tabla->hide();
+    ui->TablaInventario->hide();
     ui->CajaAgregarCombos->show();
     ui->CajaEliminarCombo->hide();
 }
@@ -210,51 +240,13 @@ void AgregarCombos::on_Reiniciar_clicked()
     NuevasIDs.clear();
 }
 
-void AgregarCombos::on_AgregarID_clicked()
-{
-    QString ID=ui->TextoIDAgregar->text();
-    bool Error=false;
-    string _ID;
-    for(auto Caracter: ID)
-    {
-        if(!Caracter.isDigit())
-        {
-            Error=true;
-            break;
-        }
-        else
-        {
-            _ID+=Caracter.toLatin1();
-        }
-    }
-    if(!Error)
-    {
-        Error=(Inventario.find(_ID)==Inventario.end())? true :false;
-        if(!Error)
-        {
-            NuevasIDs.push_back(ID);
-            ui->TextoIDAgregar->clear();
-        }
-        else
-        {
-            QMessageBox::critical(this, "Error", "Introduzca un valor válido");
-            ui->TextoIDAgregar->clear();
-        }
-    }
-    else
-    {
-        QMessageBox::critical(this, "Error", "Introduzca un valor válido");
-        ui->TextoIDAgregar->clear();
-    }
-}
-
-
 void AgregarCombos::on_Listo_clicked()
 {
-    QString ID=ui->TextoIDNueva->text(), Precio=ui->TextoPrecio->text();
-    string _ID, _Precio;
+    QString _ID=ui->TextoID->text(), _Precio=ui->TextoPrecio->text();
+    QString _Contenido=ui->TextoNombre->text(), _Cantidad=ui->TextoCantidad->text();
     bool Error=false;
-    for(auto Caracter: ID)
+    string ID, Precio, Contenido, Cantidad;
+    for(auto Caracter: _ID)
     {
         if(!Caracter.isDigit())
         {
@@ -263,12 +255,12 @@ void AgregarCombos::on_Listo_clicked()
         }
         else
         {
-            _ID+=Caracter.toLatin1();
+            ID+=Caracter.toLatin1();
         }
     }
     if(!Error)
     {
-        for(auto Caracter: Precio)
+        for(auto Caracter: _Precio)
         {
             if(!Caracter.isDigit())
             {
@@ -277,48 +269,67 @@ void AgregarCombos::on_Listo_clicked()
             }
             else
             {
-                _Precio+=Caracter.toLatin1();
+                Precio+=Caracter.toLatin1();
             }
         }
         if(!Error)
         {
-            string StringNuevasIDs;
-            int Contador=0;
-            for(auto Elemento: NuevasIDs)
+            int a=0;
+            for(auto Caracter: _Contenido)
             {
-                for(auto Caracter: Elemento)
-                {
-                    StringNuevasIDs+=Caracter.toLatin1();
-                }
-                if(Contador<NuevasIDs.size()-1)
-                {
-                    StringNuevasIDs+="-";
-                }
-                Contador++;
+                Contenido+=Caracter.toLatin1();
+                a++;
             }
-            auto Insertar=Combos.insert({_ID,{StringNuevasIDs,_Precio}});
-            if(!Insertar.second)
+            Error=(a==0)?true: false;
+            if(!Error)
             {
-                QMessageBox::information(this, "Error", "El elemento ya se encuentra registrado");
+                for(auto Caracter: _Cantidad)
+                {
+                    if(!Caracter.isDigit())
+                    {
+                        Error=true;
+                        break;
+                    }
+                    else
+                    {
+                        Cantidad+=Caracter.toLatin1();
+                    }
+                }
+                if(!Error)
+                {
+                    auto Insertar=Combos.insert({ID,{Contenido,Cantidad,Precio}});
+                    if(Insertar.second)
+                    {
+                        QMessageBox::information(this,"Exito","Combo agregado con exito");
+                        ui->TextoID->clear();
+                        ui->TextoNombre->clear();
+                        ui->TextoPrecio->clear();
+                        ui->TextoCantidad->clear();
+                        Primera=false;
+                    }
+                    else
+                    {
+                        QMessageBox::information(this, "Error", "La ID ingresada ya está registrada");
+                    }
+                }
+                else
+                {
+                    QMessageBox::critical(this, "Error", "Ingrese datos válidos");
+                }
             }
             else
             {
-                QMessageBox::information(this, "Exito", "El combo se ha registrado de manera exitosa");
-                Primera=false;
-                NuevasIDs.clear();
-                ui->TextoPrecio->clear();
-                ui->TextoIDNueva->clear();
-                ui->TextoIDAgregar->clear();
+                QMessageBox::critical(this, "Error", "Ingrese datos válidos");
             }
         }
         else
         {
-            QMessageBox::critical(this, "Error", "Escriba un valor válido");
+            QMessageBox::critical(this, "Error", "Ingrese datos válidos");
         }
     }
     else
     {
-        QMessageBox::critical(this, "Error", "Escriba un valor válido");
+        QMessageBox::critical(this, "Error", "Ingrese datos válidos");
     }
 }
 
@@ -326,6 +337,7 @@ void AgregarCombos::on_EliminarCombo_clicked()
 {
     ui->CajaEliminarCombo->show();
     ui->Tabla->hide();
+    ui->TablaInventario->hide();
     ui->CajaAgregarCombos->hide();
 }
 
@@ -384,37 +396,107 @@ void AgregarCombos::on_Guardar_clicked()
     {
         for(auto Elemento : Combos)
         {
-            string ID=Elemento.first, ID_Elementos, Precio;
+            string ID=Elemento.first, ID_Elementos, Precio, Cantidad;
             int Contador=0;
             for(auto Lista: Elemento.second)
             {
-                int i=0;
                 switch (Contador)
                 {
                 case 0:
                     for(auto Caracter : Lista)
                     {
-                        if(i<int(Lista.size()))
-                        {
-                            ID_Elementos+=string(1,Caracter);
-                        }
-                        else
-                        {
-                            ID_Elementos+=string(1,Caracter);
-                        }
-                        i++;
+                        ID_Elementos+=string(1,Caracter);
                     }
                     break;
                 case 1:
+                    for(auto Caracter :Lista)
+                    {
+                        Cantidad+=string(1,Caracter);
+                    }
+                    break;
+                case 2:
                     for(auto Caracter : Lista)
                     {
                         Precio+=string(1,Caracter);
                     }
+                    break;
                 }
                 Contador++;
             }
-            Archivo<<ID<<";"<<ID_Elementos<<";"<<Precio<<endl;
+            Archivo<<ID<<";"<<ID_Elementos<<";"<<Cantidad<<";"<<Precio<<endl;
         }
         Archivo.close();
     }
 }
+
+void AgregarCombos::on_BotonInventario_clicked()
+{
+    TablaInventario();
+    ui->TablaInventario->show();
+    ui->Tabla->hide();
+    ui->CajaAgregarCombos->hide();
+    ui->CajaEliminarCombo->hide();
+}
+
+void AgregarCombos::TablaInventario()
+{
+    if(!PrimeraInventario)
+    {
+        ui->TablaInventario->clearContents();
+        ui->TablaInventario->setColumnCount(4);
+        QStringList Cabecera, IDs, Nombres, Cantidades, Precios;
+        Cabecera << "ID" << "Nombre" << "Cantidad" << "Precio";
+        for(auto Item: Inventario)
+        {
+            QString _IDs,_Nombres,_Cantidades,_Precios;;
+            for(auto Caracter: Item.first)
+            {
+                _IDs+=Caracter;
+            }
+            int Contador=0;
+            for(auto Lista: Item.second)
+            {
+                if(Contador==0)
+                {
+                    for(auto Caracter: Lista)
+                    {
+                        _Nombres+=Caracter;
+                    }
+                }
+                else if(Contador==1)
+                {
+                    for(auto Caracter: Lista)
+                    {
+                            _Cantidades+=Caracter;
+                    }
+                }
+                else
+                {
+                    for(auto Caracter: Lista)
+                    {
+                            _Precios+=Caracter;
+                    }
+                }
+                Contador++;
+            }
+            IDs<<_IDs;
+            Nombres<<_Nombres;
+            Cantidades<<_Cantidades;
+            Precios<<_Precios;
+        }
+        ui->TablaInventario->setHorizontalHeaderLabels(Cabecera);
+        int Fila=0;
+        auto ComienzoNombre=Nombres.begin(), ComienzoCantidades=Cantidades.begin(), ComienzoPrecios=Precios.begin();
+        for(auto Elemento: IDs)
+        {
+            ui->TablaInventario->insertRow(ui->TablaInventario->rowCount());
+            ui->TablaInventario->setItem(Fila, 0, new QTableWidgetItem(Elemento));
+            ui->TablaInventario->setItem(Fila,1, new QTableWidgetItem(*ComienzoNombre));
+            ui->TablaInventario->setItem(Fila,2, new QTableWidgetItem(*ComienzoCantidades));
+            ui->TablaInventario->setItem(Fila++,3, new QTableWidgetItem(*ComienzoPrecios));
+            ComienzoNombre++, ComienzoPrecios++, ComienzoCantidades++;
+        }
+        PrimeraInventario=true;
+    }
+}
+

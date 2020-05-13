@@ -21,14 +21,12 @@ public:
 
 private slots:
     void on_Combos_clicked();
+
     void Cargar();
+
     void on_AgregarCombo_clicked();
 
     void on_BotonAgregar_clicked();
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
 
     void on_Reiniciar_clicked();
 
@@ -44,13 +42,17 @@ private slots:
 
     void on_Guardar_clicked();
 
+    void TablaInventario();
+
+    void on_BotonInventario_clicked();
+
 private:
     Ui::AgregarCombos *ui;
     map<string, list<string>> Combos;
     QList<QString> NuevasIDs;
-    bool Primera=false;
+    bool Primera=false, PrimeraInventario=false;
     void CargarInventario();
-    map<string,list<list<string>>> Inventario;
+    map<string,list<string>> Inventario;
 };
 
 #endif // AGREGARCOMBOS_H

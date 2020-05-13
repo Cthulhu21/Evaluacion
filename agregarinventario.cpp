@@ -301,7 +301,10 @@ void AgregarInventario::on_Guardar_clicked()
                 }
                 Contador++;
             }
-            Archivo <<ID<<";"<<Nombre<<";"<<Cantidad<<";"<<Precio<<endl;
+            if(ID!="")
+            {
+                Archivo <<ID<<";"<<Nombre<<";"<<Cantidad<<";"<<Precio<<endl;
+            }
         }
         Archivo.close();
     }

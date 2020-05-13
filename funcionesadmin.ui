@@ -6,139 +6,135 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
-    <height>243</height>
+    <width>310</width>
+    <height>259</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Opciones</string>
   </property>
-  <widget class="QWidget" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>-20</x>
-     <y>10</y>
-     <width>391</width>
-     <height>301</height>
-    </rect>
-   </property>
-   <widget class="QLabel" name="ImagenOpciones">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>-40</y>
-      <width>211</width>
-      <height>161</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">image: url(:/Recursos/OpcionesAdmin.png);	</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="Ok_FuncionesAdmin">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>210</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Ok</string>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="AgregarCombosCheck">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>100</y>
-      <width>70</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="AgregarInventarioCheck">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>140</y>
-      <width>70</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="AgregarCombosIMG">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>80</y>
-      <width>131</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">image: url(:/Recursos/AgregarCombos.png);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="AgregarInventarioIMG">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>100</y>
-      <width>161</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">image: url(:/Recursos/AgregarInventario.png);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="VerVentas_2">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>120</y>
-      <width>191</width>
-      <height>131</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">image: url(:/Recursos/VerVentasDelDia.png);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="VerVentasCheck">
-    <property name="geometry">
-     <rect>
-      <x>230</x>
-      <y>170</y>
-      <width>70</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QWidget" name="widget" native="true">
+     <widget class="QLabel" name="ImagenOpciones">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>-40</y>
+        <width>211</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/Recursos/OpcionesAdmin.png);	</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Ok_FuncionesAdmin">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>210</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ok</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="AgregarCombosCheck">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>100</y>
+        <width>70</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="AgregarInventarioCheck">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>140</y>
+        <width>70</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AgregarCombosIMG">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>80</y>
+        <width>131</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/Recursos/AgregarCombos.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="AgregarInventarioIMG">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>100</y>
+        <width>161</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/Recursos/AgregarInventario.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="VerVentas_2">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>120</y>
+        <width>191</width>
+        <height>131</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/Recursos/VerVentasDelDia.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="VerVentasCheck">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>170</y>
+        <width>70</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

@@ -134,7 +134,10 @@ void InterfazClientes::CargarCombos()
                     break;
                 }
             }
-            Combos[ID]={IDs_Elementos,PrecioTotal};
+            if(ID!="")
+            {
+                Combos[ID]={IDs_Elementos,PrecioTotal};
+            }
         }
     }
 }

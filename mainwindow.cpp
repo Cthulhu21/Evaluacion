@@ -26,8 +26,13 @@ void MainWindow::on_Ok_Acceder_clicked()
     }
     else
     {
-        Interfaz = new InterfazClientes;
-        this->hide();
-        Interfaz->show();
+        QMessageBox::information(this, "Error", "Ingreso Invalido");
     }
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    Interfaz = new InterfazClientes;
+    this->hide();
+    Interfaz->show();
 }
