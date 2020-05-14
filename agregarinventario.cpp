@@ -12,6 +12,7 @@ AgregarInventario::AgregarInventario(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AgregarInventario)
 {
+    //Apartado que esconde algunos widgets, Carga el inventario y muestra la tabla del inventario
     ui->setupUi(this);
     ui->MiniInterfazInventario->hide();
     CargarInventario();
@@ -23,7 +24,7 @@ AgregarInventario::~AgregarInventario()
     delete ui;
 }
 
-void AgregarInventario::CargarInventario()
+void AgregarInventario::CargarInventario()// Se carga el inventario desde un archivo .txt
 {
     ifstream Archivo;
     Archivo.open("Inventario.txt",ios::in);
@@ -41,7 +42,7 @@ void AgregarInventario::CargarInventario()
             getline(Archivo,Linea);
             for(auto Caracter: Linea)
             {
-                switch(Contador)
+                switch(Contador) // Se usa un conteo de ";" para guardar la información y que esta se anexe a un mapa
                 {
                 case 0:
                     if(Caracter==';')
@@ -89,24 +90,27 @@ void AgregarInventario::CargarInventario()
             Informacion.push_back({_Nombre});
             Informacion.push_back({_Cantidad});
             Informacion.push_back({_Precio});
-            Inventario[_ID]={Informacion};
+            if(_ID!="") // Este condicional para evitar vacios
+            {
+                Inventario[_ID]={Informacion};
+            }
         }
         Archivo.close();
     }
 }
 
 
-void AgregarInventario::on_VerInventario_clicked()
+void AgregarInventario::on_VerInventario_clicked() // Muestra y crea la tabla del inventario
 {
     ui->MiniInterfazInventario->hide();
     ui->Tabla->show();
-    if(!Primera)
+    if(!Primera) //Revisa que no se haya creado previamente
     {
         ui->Tabla->clearContents();
         ui->Tabla->setColumnCount(4);
         QStringList Cabecera, IDs, Nombres, Cantidades, Precios;
         Cabecera << "ID" << "Nombre" << "Cantidad" << "Precio";
-        for(auto Item: Inventario)
+        for(auto Item: Inventario) //Busca la información a mostrar en la información contenida en el mapa
         {
             QString _IDs,_Nombres,_Cantidades,_Precios;;
             for(auto Caracter: Item.first)
@@ -165,17 +169,17 @@ void AgregarInventario::on_VerInventario_clicked()
             ui->Tabla->setItem(Fila++,3, new QTableWidgetItem(*ComienzoPrecios));
             ComienzoNombre++, ComienzoPrecios++, ComienzoCantidades++;
         }
-        Primera=true;
+        Primera=true; // Como se crea la tabla, se vuelve verdadero para no volver a ser creada
     }
 }
 
-void AgregarInventario::on_AgregarElementos_clicked()
+void AgregarInventario::on_AgregarElementos_clicked() // Muestra la interfaz para agregar un nuevo elemento al inventario
 {
     ui->MiniInterfazInventario->show();
     ui->Tabla->hide();
 }
 
-void AgregarInventario::on_BotonAgregar_clicked()
+void AgregarInventario::on_BotonAgregar_clicked() // Se revisa que los parametros para ingresar un nuevo elemento al inventario sean validos
 {
     string  ID, Nombre, Cantidad, Precio;
     QString _ID =ui->ID->text();
@@ -234,12 +238,12 @@ void AgregarInventario::on_BotonAgregar_clicked()
             if(!Error)
             {
                 list<string> ListaNombre={Nombre}, ListaCantidad={Cantidad}, ListaPrecio={Precio};
-                auto Insertar=Inventario.insert({ID,{ListaNombre,ListaCantidad,ListaPrecio}});
-                if(Insertar.second==false)
+                auto Insertar=Inventario.insert({ID,{ListaNombre,ListaCantidad,ListaPrecio}}); // Se intenta ingresar el archivo
+                if(Insertar.second==false) // de no poderse
                 {
                     QMessageBox::information(this, "Error", "El elemento ya se encuentra registrado");
                 }
-                else
+                else // si se puede
                 {
                     Primera=false;
                     QMessageBox::information(this, "Exito", "Se ha registrado de manera exitosa");
@@ -247,7 +251,7 @@ void AgregarInventario::on_BotonAgregar_clicked()
             }
         }
     }
-    if(Error)
+    if(Error) // Si se encuentra un error
     {
         QMessageBox::critical(this, "Error", "Introduzca valores correctos");
         ui->Nombre->clear();
@@ -257,12 +261,12 @@ void AgregarInventario::on_BotonAgregar_clicked()
     }
 }
 
-void AgregarInventario::on_Salir_clicked()
+void AgregarInventario::on_Salir_clicked() // cerrar el programa
 {
     this->close();
 }
 
-void AgregarInventario::on_Guardar_clicked()
+void AgregarInventario::on_Guardar_clicked() // se guarda en un archivo .txt la información contenida en el mapa del inventario
 {
     ofstream Archivo;
     Archivo.open("Inventario.txt",ios::out);
@@ -301,7 +305,7 @@ void AgregarInventario::on_Guardar_clicked()
                 }
                 Contador++;
             }
-            if(ID!="")
+            if(ID!="") // en esta parte se escoge ";" para dividir la informacion
             {
                 Archivo <<ID<<";"<<Nombre<<";"<<Cantidad<<";"<<Precio<<endl;
             }

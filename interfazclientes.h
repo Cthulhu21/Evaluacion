@@ -37,7 +37,8 @@ private:
     void MostrarTabla();
     list<string> Ventas;
     QList<QString> PaqueteActual, Clientes;
-    map<string,list<string>> Inventario,Combos;
+    map<string,list<string>> Inventario,Combos,_Combos;
+    void ModificarInventario();
     int Filas=0, PrecioTotal=0;
 };
 

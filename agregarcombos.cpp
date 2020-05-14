@@ -7,6 +7,8 @@ AgregarCombos::AgregarCombos(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AgregarCombos)
 {
+    // En este apartado se ocultan ventanas temporalmente a la vez que se
+    // cargan los archivos necesarios
     ui->setupUi(this);
     Cargar();
     CargarInventario();
@@ -22,7 +24,7 @@ AgregarCombos::~AgregarCombos()
     delete ui;
 }
 
-void AgregarCombos::CargarInventario()
+void AgregarCombos::CargarInventario() // Se carga el inventario desde un archivo .txt
 {
     ifstream Archivo;
     Archivo.open("Inventario.txt",ios::in);
@@ -40,7 +42,7 @@ void AgregarCombos::CargarInventario()
             getline(Archivo,Linea);
             for(auto Caracter: Linea)
             {
-                switch(Contador)
+                switch(Contador) // Se usa un conteo de ";" para guardar la información y que esta se anexe a un mapa
                 {
                 case 0:
                     if(Caracter==';')
@@ -88,7 +90,7 @@ void AgregarCombos::CargarInventario()
             Informacion.push_back({_Nombre});
             Informacion.push_back({_Cantidad});
             Informacion.push_back({_Precio});
-            if(_ID!="")
+            if(_ID!="") // Este condicional para evitar vacios
             {
                 Inventario[_ID]={Informacion};
             }
@@ -98,7 +100,7 @@ void AgregarCombos::CargarInventario()
 }
 
 
-void AgregarCombos::Cargar()
+void AgregarCombos::Cargar() // Se cargan los combos desde un archivo .txt
 {
     ifstream Archivo;
     Archivo.open("Combos.txt",ios::in);
@@ -113,7 +115,7 @@ void AgregarCombos::Cargar()
             string Linea, ID, Contenido, PrecioTotal, Cantidad;
             getline(Archivo,Linea);
             int Contador=0;
-            for(auto Caracter : Linea)
+            for(auto Caracter : Linea) // Se usa un contador de ";" para dividir la información y guardarla para que sea guarda en un mapa
             {
                 switch (Contador)
                 {
@@ -152,7 +154,7 @@ void AgregarCombos::Cargar()
                     break;
                 }
             }
-            if(ID!="")
+            if(ID!="") // Este condicional para evitar vacios
             {
                 Combos[ID]={Contenido,Cantidad,PrecioTotal};
             }
@@ -162,17 +164,19 @@ void AgregarCombos::Cargar()
 
 void AgregarCombos::on_Combos_clicked()
 {
+    /* cuando se de click en combos se mostrará una tabla con los combos registrados y su informaicon asociada*/
     ui->CajaAgregarCombos->hide();
     ui->Tabla->show();
     ui->CajaEliminarCombo->hide();
     ui->TablaInventario->hide();
+    /* Este condicional evita que al hacer click en combos más de una una vez se vuelva a mostrar sin necesidad*/
     if(!Primera)
     {
         ui->Tabla->clearContents();
         ui->Tabla->setColumnCount(4);
         QStringList Cabecera, IDs, Contenido, PreciosTotales, Cantidad;
         Cabecera << "ID" << "Contenido"<<"Cantidad"<< "Precio Total";
-        for(auto Item: Combos)
+        for(auto Item: Combos) // Se busca la información asociada, la que se mostrará en la tabla, en el mapa asociado
         {
             QString _IDs, _Contenido,_PreciosTotales, _Cantidad;
             for(auto Caracter: Item.first)
@@ -214,20 +218,23 @@ void AgregarCombos::on_Combos_clicked()
         int Fila=0;
         auto ComienzoContenido=Contenido.begin(), ComienzoPreciosTotales=PreciosTotales.begin();
         auto ComienzoCantidad=Cantidad.begin();
-        for(auto Elemento: IDs)
+        for(auto Elemento: IDs) // Se muestra la informacion
         {
-            ui->Tabla->insertRow(ui->Tabla->rowCount());
-            ui->Tabla->setItem(Fila,0, new QTableWidgetItem(Elemento));
-            ui->Tabla->setItem(Fila,1, new QTableWidgetItem(*ComienzoContenido));
-            ui->Tabla->setItem(Fila,2, new QTableWidgetItem(*ComienzoCantidad));
-            ui->Tabla->setItem(Fila++,3, new QTableWidgetItem(*ComienzoPreciosTotales));
-            ComienzoContenido++, ComienzoPreciosTotales++, ComienzoCantidad++;
+            if(Elemento!="")
+            {
+                ui->Tabla->insertRow(ui->Tabla->rowCount());
+                ui->Tabla->setItem(Fila,0, new QTableWidgetItem(Elemento));
+                ui->Tabla->setItem(Fila,1, new QTableWidgetItem(*ComienzoContenido));
+                ui->Tabla->setItem(Fila,2, new QTableWidgetItem(*ComienzoCantidad));
+                ui->Tabla->setItem(Fila++,3, new QTableWidgetItem(*ComienzoPreciosTotales));
+                ComienzoContenido++, ComienzoPreciosTotales++, ComienzoCantidad++;
+            }
         }
-        Primera=true;
+        Primera=true; // La primera vez que se muestra la tabla
     }
 }
 
-void AgregarCombos::on_AgregarCombo_clicked()
+void AgregarCombos::on_AgregarCombo_clicked() // Se esconden y muestran los widgets correspondientes
 {
     ui->Tabla->hide();
     ui->TablaInventario->hide();
@@ -235,10 +242,7 @@ void AgregarCombos::on_AgregarCombo_clicked()
     ui->CajaEliminarCombo->hide();
 }
 
-void AgregarCombos::on_Reiniciar_clicked()
-{
-    NuevasIDs.clear();
-}
+/* Se verifica que todos los parametros pedidos sean válidos para guardar el nuevo combo*/
 
 void AgregarCombos::on_Listo_clicked()
 {
@@ -298,7 +302,7 @@ void AgregarCombos::on_Listo_clicked()
                 if(!Error)
                 {
                     auto Insertar=Combos.insert({ID,{Contenido,Cantidad,Precio}});
-                    if(Insertar.second)
+                    if(Insertar.second) // Se revisa que el combo se haya ingresado
                     {
                         QMessageBox::information(this,"Exito","Combo agregado con exito");
                         ui->TextoID->clear();
@@ -307,7 +311,7 @@ void AgregarCombos::on_Listo_clicked()
                         ui->TextoCantidad->clear();
                         Primera=false;
                     }
-                    else
+                    else // Si no lo hace, es porque ya existía una ID asociada
                     {
                         QMessageBox::information(this, "Error", "La ID ingresada ya está registrada");
                     }
@@ -333,7 +337,7 @@ void AgregarCombos::on_Listo_clicked()
     }
 }
 
-void AgregarCombos::on_EliminarCombo_clicked()
+void AgregarCombos::on_EliminarCombo_clicked() // Me muestran y ocultan los widgets asociados
 {
     ui->CajaEliminarCombo->show();
     ui->Tabla->hide();
@@ -341,7 +345,7 @@ void AgregarCombos::on_EliminarCombo_clicked()
     ui->CajaAgregarCombos->hide();
 }
 
-void AgregarCombos::on_BotonEliminarCombo_clicked()
+void AgregarCombos::on_BotonEliminarCombo_clicked() // Se verifica que el ID ingresado esté en el mapa de combos, y se procede a eliminar
 {
     QString _ID=ui->TextoEliminarCombo->text();
     string ID;
@@ -379,11 +383,12 @@ void AgregarCombos::on_BotonEliminarCombo_clicked()
     }
 }
 
-void AgregarCombos::on_Salir_clicked()
+void AgregarCombos::on_Salir_clicked() // Se cierra el programa
 {
     this->close();
 }
 
+/* Se guarda la informacion asociada contenida en los combos en un archivo.txt*/
 void AgregarCombos::on_Guardar_clicked()
 {
     ofstream Archivo;
@@ -423,13 +428,14 @@ void AgregarCombos::on_Guardar_clicked()
                 }
                 Contador++;
             }
+            //se escoge ";" como parametro para dividir la informacion
             Archivo<<ID<<";"<<ID_Elementos<<";"<<Cantidad<<";"<<Precio<<endl;
         }
         Archivo.close();
     }
 }
 
-void AgregarCombos::on_BotonInventario_clicked()
+void AgregarCombos::on_BotonInventario_clicked() // Se muestra una tabla con el inventario, el resto de widgets se ocultan
 {
     TablaInventario();
     ui->TablaInventario->show();
@@ -438,9 +444,9 @@ void AgregarCombos::on_BotonInventario_clicked()
     ui->CajaEliminarCombo->hide();
 }
 
-void AgregarCombos::TablaInventario()
+void AgregarCombos::TablaInventario() // Crea la tabla del inventario para que el administrador decida los combos
 {
-    if(!PrimeraInventario)
+    if(!PrimeraInventario) // Se revisa que la tabla no haya sido creada previamente
     {
         ui->TablaInventario->clearContents();
         ui->TablaInventario->setColumnCount(4);

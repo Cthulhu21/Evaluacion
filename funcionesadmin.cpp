@@ -12,7 +12,8 @@ FuncionesAdmin::~FuncionesAdmin()
 {
     delete ui;
 }
-
+/* Hasta el siguiente comentario; esta parte es para que sólo se pueda elegir una de las opciones mostradas
+de manera que cuando se elija una de las opciones el resto se oculten*/
 void FuncionesAdmin::on_AgregarCombosCheck_stateChanged(int arg1)
 {
     if(arg1==2)
@@ -54,7 +55,9 @@ void FuncionesAdmin::on_VerVentasCheck_stateChanged(int arg1)
         ui->AgregarInventarioCheck->show();
     }
 }
+//hasta aquí
 
+//Esta verifica cuál opción fue elegida e inicia su respectiva ui
 void FuncionesAdmin::on_Ok_FuncionesAdmin_clicked()
 {
     if(ui->AgregarCombosCheck->checkState()==2)

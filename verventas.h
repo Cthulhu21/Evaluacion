@@ -17,13 +17,18 @@ public:
     explicit VerVentas(QWidget *parent = nullptr);
     ~VerVentas();
 
+private slots:
+    void on_Venta_clicked();
+
+    void on_Salir_clicked();
+
 private:
     Ui::VerVentas *ui;
-    map<string, int> CantidadCombosOriginal, CantidadInventarioOriginal;
-    void CargarCombosO();
-    void CargarInventario();
-    void CargarCombosA();
-    void CargarInventarioA();
+    void CargarVentas();
+    list<string> IDs, Nombres, Precios;
+    int PrecioTotal=0;
+    void MostrarVentas();
+    void LimpiarVentas();
 };
 
 #endif // VERVENTAS_H

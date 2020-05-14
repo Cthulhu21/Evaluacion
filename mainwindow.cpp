@@ -14,7 +14,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_Ok_Acceder_clicked()
+void MainWindow::on_Ok_Acceder_clicked() // Ingreso para el administrador
 {
     QString Nombre=ui->TextUserName->text();
     QString CC=ui->TextCCUserName->text();
@@ -30,7 +30,7 @@ void MainWindow::on_Ok_Acceder_clicked()
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButton_clicked() // Ingreso de los clientes
 {
     Interfaz = new InterfazClientes;
     this->hide();

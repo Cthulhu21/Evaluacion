@@ -28,8 +28,6 @@ private slots:
 
     void on_BotonAgregar_clicked();
 
-    void on_Reiniciar_clicked();
-
     void on_AgregarID_clicked();
 
     void on_Listo_clicked();

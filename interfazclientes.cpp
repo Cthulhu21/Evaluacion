@@ -7,6 +7,7 @@ InterfazClientes::InterfazClientes(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::InterfazClientes)
 {
+    //apartado que carga a un mapa el inventario, los combos; también oculta widgets y muestra la interfaz de los clientes
     ui->setupUi(this);
     CargarInventario();
     CargarCombos();
@@ -19,7 +20,7 @@ InterfazClientes::~InterfazClientes()
     delete ui;
 }
 
-void InterfazClientes::CargarInventario()
+void InterfazClientes::CargarInventario() // Se carga desde un archivo .txt a un mapa información respecto al inventario
 {
     ifstream Archivo;
     Archivo.open("Inventario.txt",ios::in);
@@ -35,7 +36,7 @@ void InterfazClientes::CargarInventario()
             string _ID,_Nombre,_Cantidad,_Precio;
             int Contador=0;
             getline(Archivo,Linea);
-            for(auto Caracter: Linea)
+            for(auto Caracter: Linea) // Se coge como parametro ";" para que divida la informacion
             {
                 switch(Contador)
                 {
@@ -91,6 +92,9 @@ void InterfazClientes::CargarInventario()
     }
 }
 
+
+//se carga desde un archivo .txt a un mapa la información perteneciente a los combos
+// y se carga también a una copia
 void InterfazClientes::CargarCombos()
 {
     ifstream Archivo;
@@ -106,7 +110,7 @@ void InterfazClientes::CargarCombos()
             string Linea, ID, IDs_Elementos, PrecioTotal, Cantidad;
             getline(Archivo,Linea);
             int Contador=0;
-            for(auto Caracter : Linea)
+            for(auto Caracter : Linea) // se coge como parametro ";" para dividir la informacion
             {
                 switch (Contador)
                 {
@@ -150,11 +154,13 @@ void InterfazClientes::CargarCombos()
                 Combos[ID]={IDs_Elementos,Cantidad,PrecioTotal};
             }
         }
+        _Combos=Combos;
     }
 }
 
-void InterfazClientes::MostrarTabla()
+void InterfazClientes::MostrarTabla() // Crea la tabla de combos para los clientes
 {
+    ui->Tabla->clear();
     ui->Tabla->show();
     ui->Tabla->setColumnCount(4);
     QStringList Cabecera, IDs, Contenido, Precios, Cantidad;
@@ -211,6 +217,74 @@ void InterfazClientes::MostrarTabla()
     }
 }
 
+// Esta funcion modifica la cantidad de elementos de los combos
+
+void InterfazClientes::ModificarInventario()
+{
+    for(auto Elemento: PaqueteActual)
+    {
+        string ID, Cantidad, Nombre, Precio, Booleano;
+        int Contador=0;
+        for(auto Caracter : Elemento)
+        {
+            if(Caracter==";")
+            {
+                Contador++;
+            }
+            else if(Contador==0)
+            {
+                ID+=Caracter.toLatin1();
+            }
+            else if(Contador==3)
+            {
+                Booleano+=Caracter.toLatin1();
+            }
+        }
+        if(Booleano=="0") // Esto evita que se elimine más de una vez los combos que se hayan escogido
+        {
+            list<string> Contenido=Combos[ID];
+            Contador=0;
+            for(auto Item: Contenido)
+            {
+                switch (Contador)
+                {
+                case 0:
+                    Nombre=Item;
+                    break;
+                case 1:
+                    Cantidad=Item;
+                    break;
+                case 2:
+                    Precio=Item;
+                    break;
+                }
+                Contador++;
+            }
+            int _Cantidad=(stoi(Cantidad,nullptr,10));
+            _Cantidad--;
+            Cantidad=to_string(_Cantidad);
+            if(Cantidad!="0") // Se modifica la cantidad y el parametro para acceder a esta parte de la funcion se modifica
+            {
+                Combos[ID]={Nombre,Cantidad,Precio,"1"};
+            }
+            else // Si la cantidad se vuelve 0, entonces el combo se elimina
+            {
+                Combos.erase(ID);
+            }
+        }
+    }
+}
+
+/*Se revisa que los parametros de combo y asiento si sean correctos
+Después busca el precio total a pagar y lo agrega a un QString que se mostrará
+agrega la informacion asociada (asiento y combos) a una lista con los clientes
+agrega el ID, El contenido, y su precio a una lista de ventas
+Llama a la funcion ModificarInventario() para que merme la cantidad disponible de combos y muestre los cambios
+borra el paquete de combos actuales
+limpia los textos modificables en la UI y esconde la tabla asociada a los combos que lleva el usuario
+por último reinicia las filas y el precio total y redefine la copia de combos
+*/
+
 
 void InterfazClientes::on_BotonListo_clicked()
 {
@@ -232,8 +306,10 @@ void InterfazClientes::on_BotonListo_clicked()
             Mensaje+=Caracter;
         }
         QMessageBox::information(this, "Exito", Mensaje);
-        for(auto Elemento: PaqueteActual)
+        QString Informacion=Asiento+';';
+        for(auto Elemento: PaqueteActual) // cada elemento del paquete se agrega a las ventas
         {
+            Informacion+=Elemento+';'; // cada elemento se agrega a la informacion del cliente
             string _Elemento;
             for(auto Caracter: Elemento)
             {
@@ -241,21 +317,25 @@ void InterfazClientes::on_BotonListo_clicked()
             }
             Ventas.push_back(_Elemento);
         }
-        QString Informacion=Asiento+';';
-        for(auto Elemento:PaqueteActual)
-        {
-            Informacion+=Elemento+';';
-        }
         Clientes.push_back(Informacion);
+        ModificarInventario();
         PaqueteActual.clear();
         ui->TextoAsiento->clear();
         ui->TablaPedido->clear();
         ui->TablaPedido->hide();
+        _Combos=Combos;
+        MostrarTabla();
         Filas=0;
         PrecioTotal=0;
 
     }
 }
+
+/* Se agrega el combo a la lista actual de combos.
+Modificando el precio total a pagar
+y mostrando una tabla con todo los elementos del combo
+llama a la funcion modificarInventario() para que merme la cantidad de combos
+*/
 
 void InterfazClientes::on_BotoAgregarCombo_clicked()
 {
@@ -303,7 +383,9 @@ void InterfazClientes::on_BotoAgregarCombo_clicked()
         ui->TablaPedido->setItem(Filas,0,new QTableWidgetItem(Nombre));
         ui->TablaPedido->setItem(Filas++,1, new QTableWidgetItem(Precio));
         ui->TablaPedido->show();
-        PaqueteActual.push_back(_ID+";"+Nombre+";"+Precio);
+        PaqueteActual.push_back(_ID+";"+Nombre+";"+Precio+";"+"0");
+        ModificarInventario();
+        MostrarTabla();
         ui->TextoID->clear();
     }
     else
@@ -312,21 +394,27 @@ void InterfazClientes::on_BotoAgregarCombo_clicked()
     }
 }
 
+
+/*reinicia el combo actual, y usa la copia del mapa de combos para no perder la informacion*/
 void InterfazClientes::on_BotonReiniciarPedido_clicked()
 {
     Filas=0, PrecioTotal=0;;
     PaqueteActual.clear();
+    Combos=_Combos;
+    MostrarTabla();
     ui->TablaPedido->clear();
     ui->TablaPedido->hide();
     QMessageBox::information(this, "Reinicio", "Se ha reiniciado su pedido");
 }
 
 
-void InterfazClientes::on_Salir_clicked()
+void InterfazClientes::on_Salir_clicked() //sale del programa
 {
     GuardarVentas();
     this->close();
 }
+
+/*Guarda las ventas en un archivo .txt*/
 
 void InterfazClientes::GuardarVentas()
 {
@@ -344,7 +432,7 @@ void InterfazClientes::GuardarVentas()
             string ID, Nombre, Precio;
             getline(Archivo,Linea);
             int Contador=0;
-            for(auto Caracter: Linea)
+            for(auto Caracter: Linea) // Se busca la información que ya contiene el archivo para volver a escribirla
             {
                 switch (Contador)
                 {
@@ -381,13 +469,13 @@ void InterfazClientes::GuardarVentas()
             }
             if(ID!="")
             {
-                Ventas.push_back({ID+";"+Nombre+";"+Precio});
+                Ventas.push_back({ID+";"+Nombre+";"+Precio}); // se coge ";" como parametro para dividir la informacion
             }
         }
         Archivo.close();
         ofstream Archivo;
         Archivo.open("Ventas.txt",ios::out);
-        for(auto Elemento: Ventas)
+        for(auto Elemento: Ventas) // Cada elemento de ventas se guarda en el archivo
         {
             Archivo<<Elemento;
         }
