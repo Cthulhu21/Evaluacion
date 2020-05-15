@@ -223,10 +223,15 @@ void InterfazClientes::ModificarInventario()
 {
     for(auto Elemento: PaqueteActual)
     {
+        QString Informacion;
         string ID, Cantidad, Nombre, Precio, Booleano;
         int Contador=0;
         for(auto Caracter : Elemento)
         {
+            if(Contador!=3)
+            {
+                Informacion+=Caracter;
+            }
             if(Caracter==";")
             {
                 Contador++;
@@ -238,6 +243,7 @@ void InterfazClientes::ModificarInventario()
             else if(Contador==3)
             {
                 Booleano+=Caracter.toLatin1();
+                Informacion+='1';
             }
         }
         if(Booleano=="0") // Esto evita que se elimine más de una vez los combos que se hayan escogido
@@ -265,11 +271,33 @@ void InterfazClientes::ModificarInventario()
             Cantidad=to_string(_Cantidad);
             if(Cantidad!="0") // Se modifica la cantidad y el parametro para acceder a esta parte de la funcion se modifica
             {
-                Combos[ID]={Nombre,Cantidad,Precio,"1"};
+                auto Pos=PaqueteActual.begin();
+                for(auto Item : PaqueteActual)
+                {
+                    if (Item==Elemento)
+                    {
+                        PaqueteActual.erase(Pos);
+                        break;
+                    }
+                    Pos++;
+                }
+                PaqueteActual.push_back(Informacion);
+                Combos[ID]={Nombre,Cantidad,Precio};
             }
             else // Si la cantidad se vuelve 0, entonces el combo se elimina
             {
                 Combos.erase(ID);
+                auto Pos=PaqueteActual.begin();
+                for(auto Item : PaqueteActual)
+                {
+                    if (Item==Elemento)
+                    {
+                        PaqueteActual.erase(Pos);
+                        break;
+                    }
+                    Pos++;
+                }
+                PaqueteActual.push_back(Informacion);
             }
         }
     }
