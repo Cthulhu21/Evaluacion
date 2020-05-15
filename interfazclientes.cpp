@@ -483,6 +483,7 @@ void InterfazClientes::GuardarVentas()
                     {
                         Nombre+=Caracter;
                     }
+                    break;
                 case 2:
                     if(Caracter==';')
                     {
@@ -492,6 +493,8 @@ void InterfazClientes::GuardarVentas()
                     {
                         Precio+=Caracter;
                     }
+                    break;
+                default:
                     break;
                 }
             }
