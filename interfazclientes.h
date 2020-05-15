@@ -28,6 +28,8 @@ private slots:
 
     void GuardarVentas();
 
+    void GuardarCombos();
+
     void on_Salir_clicked();
 
 private:

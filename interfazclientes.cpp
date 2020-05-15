@@ -339,9 +339,17 @@ void InterfazClientes::on_BotonListo_clicked()
         {
             Informacion+=Elemento+';'; // cada elemento se agrega a la informacion del cliente
             string _Elemento;
+            int Contador=0;
             for(auto Caracter: Elemento)
             {
-                _Elemento+=Caracter.toLatin1();
+                if(Caracter==";")
+                {
+                    Contador++;
+                }
+                if(Contador!=3)
+                {
+                    _Elemento+=Caracter.toLatin1();
+                }
             }
             Ventas.push_back(_Elemento);
         }
@@ -439,6 +447,7 @@ void InterfazClientes::on_BotonReiniciarPedido_clicked()
 void InterfazClientes::on_Salir_clicked() //sale del programa
 {
     GuardarVentas();
+    GuardarCombos();
     this->close();
 }
 
@@ -508,9 +517,55 @@ void InterfazClientes::GuardarVentas()
         Archivo.open("Ventas.txt",ios::out);
         for(auto Elemento: Ventas) // Cada elemento de ventas se guarda en el archivo
         {
-            Archivo<<Elemento;
+            Archivo<<Elemento<<endl;
         }
         Archivo.close();
     }
 
+}
+
+void InterfazClientes::GuardarCombos()
+{
+    ofstream Archivo;
+    Archivo.open("Combos.txt",ios::out);
+    if(Archivo.fail())
+    {
+        QMessageBox::critical(this, "Error", "Ha ocurrido un error al intentar abrir el archivo");
+    }
+    else
+    {
+        for(auto Elemento : Combos)
+        {
+            string ID=Elemento.first, ID_Elementos, Precio, Cantidad;
+            int Contador=0;
+            for(auto Lista: Elemento.second)
+            {
+                switch (Contador)
+                {
+                case 0:
+                    for(auto Caracter : Lista)
+                    {
+                        ID_Elementos+=string(1,Caracter);
+                    }
+                    break;
+                case 1:
+                    for(auto Caracter :Lista)
+                    {
+                        Cantidad+=string(1,Caracter);
+                    }
+                    break;
+                case 2:
+                    for(auto Caracter : Lista)
+                    {
+                        Precio+=string(1,Caracter);
+                    }
+                    break;
+                }
+                Contador++;
+            }
+            //se escoge ";" como parametro para dividir la informacion
+            Archivo<<ID<<";"<<ID_Elementos<<";"<<Cantidad<<";"<<Precio<<endl;
+        }
+        Archivo.close();
+    }
 }
